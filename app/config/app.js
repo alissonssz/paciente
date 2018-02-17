@@ -7,15 +7,17 @@ var express = require("express"),
     controller = require('../controllers/estabelecimento'),
     compression = require("compression"),
     helmet = require("helmet"),
-    dependencies = require("../routes/dependencies")
+    dependencies = require("../routes/dependencies"),
+    path = require('path')
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(compression());
 app.use(helmet());
-app.use(express.static('./public'));
+app.use(express.static(path.resolve('app/public')));
 app.set('view engine', 'ejs');
+app.set('views', path.resolve('app/views'));
 
 app.use('/', dependencies);
 app.use('/', router);
