@@ -1,41 +1,48 @@
-var Estabelecimento = require('../models/estabelecimento');
-var _ = require('lodash');
+var Estabelecimento = require("../models/estabelecimento");
+var _ = require("lodash");
 
 exports.getAll = function(callback) {
-  Estabelecimento.find({},
+  Estabelecimento.find(
+    {},
     {
       id: 1,
       nome: 1,
       coordenadas: 1,
-      'endereco.logradouro': 1,
+      "endereco.logradouro": 1,
       _id: 0
-    }, function(err, estabelecimentos) {
-    callback(estabelecimentos);
-  });
-}
+    },
+    function(err, estabelecimentos) {
+      callback(estabelecimentos);
+    }
+  );
+};
 
 exports.get = function(id, callback) {
   var query = Estabelecimento.findOne({ id: id });
-  query.exec(function (err, estabelecimento) {
+  query.exec(function(err, estabelecimento) {
     if (estabelecimento === null) {
-      err = { error :'estabelecimento não encontrado' };
+      err = { error: "estabelecimento não encontrado" };
     }
     callback(err, estabelecimento);
   });
-}
+};
 
 exports.getAvaliacoes = function(type, callback) {
   Estabelecimento.aggregate(
     [
-      { "$project": {
-        "_id": "$id",
-        "nome": '$nome',
-        "cidade": "$endereco.municipio",
-        "avgNota": { $avg: "$avaliacoes." + type + ".nota" },
-      }},
-      { "$match": {
-        "avgNota": { "$exists": true, "$ne": null }
-      }}
+      {
+        $project: {
+          _id: "$id",
+          nome: "$nome",
+          cidade: "$endereco.municipio",
+          avgNota: { $avg: "$avaliacoes." + type + ".nota" }
+        }
+      },
+      {
+        $match: {
+          avgNota: { $exists: true, $ne: null }
+        }
+      }
     ],
     function(err, ranking) {
       ranking.forEach(function(estabelecimento) {
@@ -44,24 +51,28 @@ exports.getAvaliacoes = function(type, callback) {
       callback(ranking);
     }
   );
-}
+};
 
 exports.getLista = function(type, order, cidade, callback) {
-  if(cidade === 'null') {
+  if (cidade === "null") {
     Estabelecimento.aggregate(
       [
-        { "$project": {
-          "_id": "$id",
-          "nome": '$nome',
-          "cidade": "$endereco.municipio",
-          "bairro": "$endereco.bairro",
-          "rua" : "$endereco.logradouro",
-          "avgNota": { $avg: "$avaliacoes." + type + ".nota" },
-        }},
-        { "$sort": { "avgNota": order } },
-        { "$match": {
-          "avgNota": { "$exists": true, "$ne": null }
-        }}
+        {
+          $project: {
+            _id: "$id",
+            nome: "$nome",
+            cidade: "$endereco.municipio",
+            bairro: "$endereco.bairro",
+            rua: "$endereco.logradouro",
+            avgNota: { $avg: "$avaliacoes." + type + ".nota" }
+          }
+        },
+        { $sort: { avgNota: order } },
+        {
+          $match: {
+            avgNota: { $exists: true, $ne: null }
+          }
+        }
       ],
       function(err, ranking) {
         ranking.forEach(function(estabelecimento) {
@@ -73,19 +84,23 @@ exports.getLista = function(type, order, cidade, callback) {
   } else {
     Estabelecimento.aggregate(
       [
-        {"$match" : { "endereco.municipio" : cidade }},
-        { "$project": {
-          "_id": "$id",
-          "nome": '$nome',
-          "cidade": "$endereco.municipio",
-          "bairro": "$endereco.bairro",
-          "rua" : "$endereco.logradouro",
-          "avgNota": { $avg: "$avaliacoes." + type + ".nota" },
-        }},
-        { "$sort": { "avgNota": order } },
-        { "$match": {
-          "avgNota": { "$exists": true, "$ne": null }
-        }}
+        { $match: { "endereco.municipio": cidade } },
+        {
+          $project: {
+            _id: "$id",
+            nome: "$nome",
+            cidade: "$endereco.municipio",
+            bairro: "$endereco.bairro",
+            rua: "$endereco.logradouro",
+            avgNota: { $avg: "$avaliacoes." + type + ".nota" }
+          }
+        },
+        { $sort: { avgNota: order } },
+        {
+          $match: {
+            avgNota: { $exists: true, $ne: null }
+          }
+        }
       ],
       function(err, ranking) {
         ranking.forEach(function(estabelecimento) {
@@ -95,18 +110,24 @@ exports.getLista = function(type, order, cidade, callback) {
       }
     );
   }
-}
+};
 
 exports.getNota = function(estabelecimento, type) {
   function average(array) {
-    function plus(a, b) { return a + b; }
-    if(array.length === 0) { return 0; }
+    function plus(a, b) {
+      return a + b;
+    }
+    if (array.length === 0) {
+      return 0;
+    }
     return Math.round(array.reduce(plus) / array.length);
   }
-  return average(estabelecimento.avaliacoes[type].map(function(avaliacao) {
-    return avaliacao.nota;
-  }));
-}
+  return average(
+    estabelecimento.avaliacoes[type].map(function(avaliacao) {
+      return avaliacao.nota;
+    })
+  );
+};
 
 exports.getNotas = function(estabelecimento, callback) {
   var notas = {
@@ -116,9 +137,9 @@ exports.getNotas = function(estabelecimento, callback) {
     equipamentos: this.getNota(estabelecimento, "equipamentos"),
     medicamentos: this.getNota(estabelecimento, "medicamentos"),
     infraestrutura: this.getNota(estabelecimento, "infraestrutura")
-  }
+  };
   callback(notas);
-}
+};
 
 exports.avalia = function(id, avaliacao, callback) {
   this.get(id, function(err, estabelecimento) {
@@ -129,6 +150,6 @@ exports.avalia = function(id, avaliacao, callback) {
       callback(err);
     });
   });
-}
+};
 
 // db.estabelecimentos.find({ "avaliacoes.medicamentos._id": ObjectId("596d3171876d34388a04b06a")}, {"avaliacoes.medicamentos.$": true}).pretty()

@@ -1,6 +1,6 @@
-var jsonfile = require('jsonfile');
-var dadosValidos = require('./dados-validos');
-var path = 'dados-completos.json';
+var jsonfile = require("jsonfile");
+var dadosValidos = require("./dados-validos");
+var path = "dados-completos.json";
 
 /*
 jsonfile.readFile(path, function(err, estabelecimentos) {
@@ -19,25 +19,35 @@ jsonfile.readFile(path, function(err, estabelecimentos) {
 */
 
 // Filtra dos estabelecimentos válidos os estabelecimentos que não são centrais de atendimento
-var listaInvalidos = ["SAMU", "SECRETARIA", "ACADEMIA", "VIGILANCIA", "FARMACIA",
-                      "LABORATORIO", "SINDICATO", "PENITENCIARIA", "PRESIDIO", "REGULACAO"];
+var listaInvalidos = [
+  "SAMU",
+  "SECRETARIA",
+  "ACADEMIA",
+  "VIGILANCIA",
+  "FARMACIA",
+  "LABORATORIO",
+  "SINDICATO",
+  "PENITENCIARIA",
+  "PRESIDIO",
+  "REGULACAO"
+];
 
 function geraRegExp(list) {
-  var strRegExp = '';
+  var strRegExp = "";
   var last = list.pop();
   list.forEach(function(item) {
-    strRegExp += ('\\b' + item + '\\b' + '\|');
+    strRegExp += "\\b" + item + "\\b" + "|";
   });
-  strRegExp += '\\b' + last + '\\b';
+  strRegExp += "\\b" + last + "\\b";
   return new RegExp(strRegExp);
 }
 
 var regExp = geraRegExp(listaInvalidos);
 var validos = dadosValidos.filter(function(estabelecimento) {
-  return !regExp.test(estabelecimento['NOME FANTASIA']);
+  return !regExp.test(estabelecimento["NOME FANTASIA"]);
 });
 
-var pathFiltrados = 'dados-validos.json';
-jsonfile.writeFile(pathFiltrados, validos, function (err) {
+var pathFiltrados = "dados-validos.json";
+jsonfile.writeFile(pathFiltrados, validos, function(err) {
   console.error(err);
 });

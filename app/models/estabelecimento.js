@@ -1,4 +1,4 @@
-var mongoose = require('mongoose');
+var mongoose = require("mongoose");
 
 var schema = new mongoose.Schema({
   id: Number,
@@ -16,46 +16,58 @@ var schema = new mongoose.Schema({
     logradouro: String
   },
   avaliacoes: {
-    presencaEquipe: [{
-      nota: Number,
-      data: Date,
-      turno: String,
-      especialidade: String,
-      respostaInstituicao: String,
-      comentario: String
-    }],
-    tempoEspera: [{
-      nota: Number,
-      data: Date,
-      turno: String,
-      tempoEsperado: String,
-      procedimentoMedico: String,
-      especialidade: String,
-      respostaInstituicao: String,
-      comentario: String
-    }],
-    qualidadeAtendimento: [{
-      nota: Number,
-      data: Date,
-      turno: String,
-      comentario: String
-    }],
-    medicamentos: [{
-      nota: Number,
-      medicamento: String,
-      respostaInstituicao: String,
-      comentario: String
-    }],
-    equipamentos: [{
-      nota: Number,
-      equipamento: String,
-      respostaInstituicao: String,
-      comentario: String
-    }],
-    infraestrutura: [{
-      nota: Number,
-      comentario: String
-    }]
+    presencaEquipe: [
+      {
+        nota: Number,
+        data: Date,
+        turno: String,
+        especialidade: String,
+        respostaInstituicao: String,
+        comentario: String
+      }
+    ],
+    tempoEspera: [
+      {
+        nota: Number,
+        data: Date,
+        turno: String,
+        tempoEsperado: String,
+        procedimentoMedico: String,
+        especialidade: String,
+        respostaInstituicao: String,
+        comentario: String
+      }
+    ],
+    qualidadeAtendimento: [
+      {
+        nota: Number,
+        data: Date,
+        turno: String,
+        comentario: String
+      }
+    ],
+    medicamentos: [
+      {
+        nota: Number,
+        medicamento: String,
+        respostaInstituicao: String,
+        comentario: String
+      }
+    ],
+    equipamentos: [
+      {
+        nota: Number,
+        equipamento: String,
+        respostaInstituicao: String,
+        comentario: String
+      }
+    ],
+    infraestrutura: [
+      {
+        nota: Number,
+        comentario: String
+      }
+    ]
   }
 });
 

@@ -1,31 +1,32 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-var controller = require('../controllers/estabelecimento');
+var controller = require("../controllers/estabelecimento");
 
-router.route('/')
-  .get(function(req, res) {
-    controller.getAll(function(estabelecimentos) {
-      res.json(estabelecimentos);
-    })
-  })
+router.route("/").get(function(req, res) {
+  controller.getAll(function(estabelecimentos) {
+    res.json(estabelecimentos);
+  });
+});
 
-router.route('/:id')
+router
+  .route("/:id")
   .get(function(req, res, next) {
     var id = req.params.id;
     controller.get(id, function(err, estabelecimento) {
-      if(!err) {
+      if (!err) {
         controller.getNotas(estabelecimento, function(notas) {
-          var data = { id: estabelecimento.id,
+          var data = {
+            id: estabelecimento.id,
             nome: estabelecimento.nome,
             endereco: estabelecimento.endereco.logradouro,
             bairro: estabelecimento.endereco.bairro,
             municipio: estabelecimento.endereco.municipio,
             numero: estabelecimento.endereco.numero,
-            notas: notas }
-          res.render('estabelecimento', data);
+            notas: notas
+          };
+          res.render("estabelecimento", data);
         });
-      }
-      else {
+      } else {
         next();
       }
     });
@@ -39,13 +40,16 @@ router.route('/:id')
       res.sendStatus(401);
     } else {
       controller.avalia(id, avaliacao, function(err) {
-        if(err) {
+        if (err) {
           res.sendStatus(403);
         }
-        res.cookie(type, "", { maxAge: 24 * 60 * 60 * 1000, path: '/estabelecimentos/' + id });
+        res.cookie(type, "", {
+          maxAge: 24 * 60 * 60 * 1000,
+          path: "/estabelecimentos/" + id
+        });
         res.sendStatus(200);
       });
     }
-  })
+  });
 
 module.exports = router;
