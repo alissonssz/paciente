@@ -1,7 +1,7 @@
 var app = require("./app/config/app");
-var startMongo = require("./app/config/db");
+var db = require("./app/config/db");
 
-startMongo();
+db.connect();
 app.set("port", process.env.PORT || 3000);
 
 app.listen(app.get("port"), function() {
