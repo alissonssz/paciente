@@ -9,12 +9,14 @@ var compression = require("compression");
 var helmet = require("helmet");
 var dependencies = require("../routes/dependencies");
 var path = require("path");
+var morgan = require("morgan");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(compression());
 app.use(helmet());
+app.use(morgan("tiny"));
 app.use(express.static(path.resolve("app/public")));
 app.set("view engine", "ejs");
 app.set("views", path.resolve("app/views"));
