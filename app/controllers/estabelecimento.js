@@ -9,6 +9,8 @@ exports.getAll = function(callback) {
       nome: 1,
       coordenadas: 1,
       "endereco.logradouro": 1,
+      "endereco.municipio": 1,
+      "endereco.bairro": 1,
       _id: 0
     },
     function(err, estabelecimentos) {
