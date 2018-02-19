@@ -2,18 +2,24 @@ var express = require("express");
 var router = express.Router();
 var controller = require("../controllers/estabelecimento");
 
-router.route("/").get(function(req, res) {
-  controller.getAll(function(estabelecimentos) {
-    res.json(estabelecimentos);
-  });
+router.route("/").get((req, res, next) => {
+  controller
+    .getAll()
+    .then(estabelecimentos => {
+      res.json(estabelecimentos);
+    })
+    .catch(error => {
+      next();
+    });
 });
 
 router
   .route("/:id")
-  .get(function(req, res, next) {
+  .get((req, res, next) => {
     var id = req.params.id;
-    controller.get(id, function(err, estabelecimento) {
-      if (!err) {
+    controller
+      .get(id)
+      .then(estabelecimento => {
         controller.getNotas(estabelecimento, function(notas) {
           var data = {
             id: estabelecimento.id,
@@ -24,12 +30,12 @@ router
             numero: estabelecimento.endereco.numero,
             notas: notas
           };
-          res.render("estabelecimento", data);
+          res.json(data);
         });
-      } else {
+      })
+      .catch(error => {
         next();
-      }
-    });
+      });
   })
   .post(function(req, res) {
     var id = req.params.id;

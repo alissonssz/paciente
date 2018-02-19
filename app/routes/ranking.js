@@ -2,33 +2,21 @@ var express = require("express");
 var router = express.Router();
 var controller = require("../controllers/estabelecimento");
 
-router.route("/").get(function(req, res) {
-  var ranking = {};
-  controller.getAvaliacoes("presencaEquipe", function(rankingPresenca) {
-    ranking.presencaEquipe = rankingPresenca;
-    controller.getAvaliacoes("tempoEspera", function(rankingEspera) {
-      ranking.tempoEspera = rankingEspera;
-      controller.getAvaliacoes("qualidadeAtendimento", function(
-        rankingAtendimento
-      ) {
-        ranking.qualidadeAtendimento = rankingAtendimento;
-        controller.getAvaliacoes("medicamentos", function(rankingMedicamentos) {
-          ranking.medicamentos = rankingMedicamentos;
-          controller.getAvaliacoes("equipamentos", function(
-            rankingEquipamentos
-          ) {
-            ranking.equipamentos = rankingEquipamentos;
-            controller.getAvaliacoes("infraestrutura", function(
-              rankingInfraestrutura
-            ) {
-              ranking.infraestrutura = rankingInfraestrutura;
-              res.json(ranking);
-            });
-          });
-        });
-      });
+router.route("/").get((req, res, next) => {
+  Promise.all([
+    controller.getAvaliacoes("presencaEquipe"),
+    controller.getAvaliacoes("tempoEspera"),
+    controller.getAvaliacoes("qualidadeAtendimento"),
+    controller.getAvaliacoes("medicamentos"),
+    controller.getAvaliacoes("equipamentos"),
+    controller.getAvaliacoes("infraestrutura")
+  ])
+    .then(ranking => {
+      res.json(ranking);
+    })
+    .catch(error => {
+      next();
     });
-  });
 });
 
 router.route("/:id").get(function(req, res) {

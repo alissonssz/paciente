@@ -1,8 +1,8 @@
 var Estabelecimento = require("../models/estabelecimento");
 var _ = require("lodash");
 
-exports.getAll = function(callback) {
-  Estabelecimento.find(
+exports.getAll = () => {
+  return Estabelecimento.find(
     {},
     {
       id: 1,
@@ -12,47 +12,34 @@ exports.getAll = function(callback) {
       "endereco.municipio": 1,
       "endereco.bairro": 1,
       _id: 0
-    },
-    function(err, estabelecimentos) {
-      callback(estabelecimentos);
     }
   );
 };
 
-exports.get = function(id, callback) {
-  var query = Estabelecimento.findOne({ id: id });
-  query.exec(function(err, estabelecimento) {
-    if (estabelecimento === null) {
-      err = { error: "estabelecimento não encontrado" };
-    }
-    callback(err, estabelecimento);
-  });
+exports.get = id => {
+  return Estabelecimento.findOne({ id: id });
 };
 
-exports.getAvaliacoes = function(type, callback) {
-  Estabelecimento.aggregate(
-    [
-      {
-        $project: {
-          _id: "$id",
-          nome: "$nome",
-          cidade: "$endereco.municipio",
-          avgNota: { $avg: "$avaliacoes." + type + ".nota" }
-        }
-      },
-      {
-        $match: {
-          avgNota: { $exists: true, $ne: null }
-        }
+exports.getAvaliacoes = type => {
+  return Estabelecimento.aggregate([
+    {
+      $project: {
+        _id: "$id",
+        nome: "$nome",
+        cidade: "$endereco.municipio",
+        avgNota: { $avg: "$avaliacoes." + type + ".nota" }
       }
-    ],
-    function(err, ranking) {
-      ranking.forEach(function(estabelecimento) {
-        estabelecimento.avgNota = estabelecimento.avgNota.toFixed(1);
-      });
-      callback(ranking);
-    }
-  );
+    },
+    {
+      $match: { avgNota: { $exists: true, $ne: null } }
+    },
+    {
+      $sort: { avgNota: -1 }
+    },
+    { $limit: 5 }
+  ]).then(ranking => {
+    return { [type]: ranking };
+  });
 };
 
 exports.getLista = function(type, order, cidade, callback) {
