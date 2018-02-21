@@ -25,7 +25,7 @@ app.use("/", dependencies);
 app.use("/", router);
 
 // Error handling
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
   res.render("404");
 });
 
