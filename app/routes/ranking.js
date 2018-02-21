@@ -1,6 +1,6 @@
 var express = require("express");
 var router = express.Router();
-var controller = require("../controllers/estabelecimento");
+var controller = require("../controllers/ranking");
 
 router.route("/").get((req, res, next) => {
   Promise.all([
