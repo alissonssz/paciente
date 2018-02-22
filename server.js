@@ -1,9 +1,9 @@
 var app = require("./app/config/app");
 var db = require("./app/config/db");
+require("dotenv").config();
 
 db.connect();
-app.set("port", process.env.PORT || 3000);
 
-app.listen(app.get("port"), () => {
+app.listen(process.env.PORT, () => {
   console.log("Server Running!");
 });
