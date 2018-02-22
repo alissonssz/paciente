@@ -24,7 +24,7 @@ router.get("/manual", function(req, res) {
   res.sendFile(path.resolve("/public/manual.pdf"));
 });
 
-router.use("/estabelecimentos", estabelecimento);
-router.use("/ranking", ranking);
+router.use("/api", estabelecimento);
+router.use("/api", ranking);
 
 module.exports = router;

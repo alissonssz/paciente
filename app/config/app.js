@@ -3,8 +3,6 @@ var app = express();
 var bodyParser = require("body-parser");
 var cookieParser = require("cookie-parser");
 var router = require("../routes/index");
-var Estabelecimento = require("../controllers/estabelecimento");
-var controller = require("../controllers/estabelecimento");
 var compression = require("compression");
 var helmet = require("helmet");
 var dependencies = require("../routes/dependencies");
@@ -26,7 +24,12 @@ app.use("/", router);
 
 // Error handling
 app.use((req, res, next) => {
-  res.render("404");
+  res.sendStatus(404);
+});
+
+app.use((err, req, res, next) => {
+  console.log(err);
+  res.sendStatus(500);
 });
 
 module.exports = app;

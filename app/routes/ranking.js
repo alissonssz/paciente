@@ -2,7 +2,7 @@ var express = require("express");
 var router = express.Router();
 var controller = require("../controllers/ranking");
 
-router.route("/").get((req, res, next) => {
+router.route("/ranking").get((req, res, next) => {
   Promise.all([
     controller.getAvaliacoes("presencaEquipe"),
     controller.getAvaliacoes("tempoEspera"),
@@ -15,18 +15,18 @@ router.route("/").get((req, res, next) => {
       res.json(ranking);
     })
     .catch(error => {
-      res.sendStatus(500);
+      next(error);
     });
 });
 
-router.route("/:id").get((req, res, next) => {
+router.route("/ranking/:id").get((req, res, next) => {
   controller
     .getLista(req.params.id)
     .then(list => {
       res.json(list);
     })
     .catch(error => {
-      res.sendStatus(500);
+      next(error);
     });
 });
 
