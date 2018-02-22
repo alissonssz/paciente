@@ -14,10 +14,13 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(compression());
 app.use(helmet());
-app.use(morgan("tiny"));
 app.use(express.static(path.resolve("app/public")));
 app.set("view engine", "ejs");
 app.set("views", path.resolve("app/views"));
+
+if (process.env.NODE_ENV !== "test") {
+  app.use(morgan("tiny"));
+}
 
 app.use("/", dependencies);
 app.use("/", router);

@@ -4,7 +4,7 @@
   "description": "Sistema de avaliacao de servicos medicos",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "start": "node server.js"
   },
   "author": "Dr Ligado",
@@ -36,7 +36,10 @@
     "vue-resource": "^1.3.4"
   },
   "devDependencies": {
+    "chai": "^4.1.2",
+    "chai-http": "^3.0.0",
     "jsonfile": "^3.0.0",
+    "mocha": "^5.0.1",
     "nightmare": "^2.10.0",
     "prettier": "1.10.2"
   }
