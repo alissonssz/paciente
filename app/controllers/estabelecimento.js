@@ -54,7 +54,9 @@ exports.getInfoEstabelecimento = estabelecimentoId => {
         }
       }
     }
-  ]);
+  ]).then(estab => {
+    return estab[0];
+  });
 };
 
 exports.save = (estabelecimento, type, avaliacao) => {

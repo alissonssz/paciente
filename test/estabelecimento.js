@@ -41,4 +41,20 @@ describe("/GET estabelecimentos", () => {
         done();
       });
   });
+
+  it("it should GET a establishment by id", done => {
+    chai
+      .request(server)
+      .get("/api/estabelecimentos/2607832")
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.should.be.a("object");
+        res.body.should.have.property("nome");
+        res.body.should.have.property("rua");
+        res.body.should.have.property("bairro");
+        res.body.should.have.property("numero");
+        res.body.should.have.property("notas");
+        done();
+      });
+  });
 });
