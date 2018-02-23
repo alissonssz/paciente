@@ -7,7 +7,7 @@ const options = {
 
 exports.connect = () => {
   mongoose
-    .connect("mongodb://localhost/saude", options)
+    .connect(process.env.DB_URL, options)
     .then(() => {
       console.log("mongodb connected");
     })
