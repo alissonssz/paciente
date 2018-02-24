@@ -1,18 +1,19 @@
 const Estabelecimento = require("../models/estabelecimento");
 
 exports.getAll = () => {
-  return Estabelecimento.find(
-    {},
+  return Estabelecimento.aggregate([
     {
-      id: 1,
-      nome: 1,
-      coordenadas: 1,
-      "endereco.logradouro": 1,
-      "endereco.municipio": 1,
-      "endereco.bairro": 1,
-      _id: 0
+      $project: {
+        _id: "$id",
+        nome: "$nome",
+        lat: "$coordenadas.lat",
+        lng: "$coordenadas.lng",
+        rua: "$endereco.logradouro",
+        municipio: "$endereco.municipio",
+        bairro: "$endereco.bairro"
+      }
     }
-  );
+  ]);
 };
 
 exports.get = id => {
