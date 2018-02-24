@@ -10,7 +10,7 @@ let should = chai.should();
 
 chai.use(chaiHttp);
 
-describe("/GET estabelecimentos", () => {
+describe("/GET establishments", () => {
   it("it should GET all establishments", done => {
     chai
       .request(server)
@@ -22,7 +22,9 @@ describe("/GET estabelecimentos", () => {
         done();
       });
   });
+});
 
+describe("/POST establishment", () => {
   it("it should POST a evaluation", done => {
     let evaluation = {
       type: "qualidadeAtendimento",
@@ -41,7 +43,9 @@ describe("/GET estabelecimentos", () => {
         done();
       });
   });
+});
 
+describe("/GET establishment/:id", () => {
   it("it should GET a establishment by id", done => {
     chai
       .request(server)

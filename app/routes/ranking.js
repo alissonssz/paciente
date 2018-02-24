@@ -11,7 +11,8 @@ router.route("/ranking").get((req, res, next) => {
     controller.getAvaliacoes("equipamentos"),
     controller.getAvaliacoes("infraestrutura")
   ])
-    .then(ranking => {
+    .then(result => {
+      let ranking = Object.assign({}, ...result);
       res.json(ranking);
     })
     .catch(error => {
